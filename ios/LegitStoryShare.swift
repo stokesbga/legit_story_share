@@ -41,6 +41,7 @@ class RNLegitStoryShare: NSObject{
                           attributionLink: String,
                           backgroundBottomColor: String,
                           backgroundTopColor: String,
+                          isVideo: Bool = false,
                           resolve: RCTPromiseResolveBlock,
                           reject: RCTPromiseRejectBlock){
        do{
@@ -49,7 +50,11 @@ class RNLegitStoryShare: NSObject{
                var pasteboardItems: Dictionary<String, Any> = [:]
 
                if(backgroundData != nil){
-                   pasteboardItems["com.instagram.sharedSticker.backgroundImage"] = backgroundData!
+                   if(isVideo) {
+                       pasteboardItems["com.instagram.sharedSticker.backgroundVideo"] = backgroundData!
+                   } else {
+                       pasteboardItems["com.instagram.sharedSticker.backgroundImage"] = backgroundData!
+                   }
                }
 
                if(stickerData != nil){
@@ -79,7 +84,7 @@ class RNLegitStoryShare: NSObject{
               rejecter reject: RCTPromiseRejectBlock) -> Void {
 
        do {
-           if (config["backgroundAsset"] == nil && config["stickerAsset"] == nil){
+           if (config["backgroundAsset"] == nil && config["backgroundVideoAsset"] == nil && config["stickerAsset"] == nil){
                let error = NSError(domain: domain, code: 400, userInfo: ["Error": "Background Asset and Sticker Asset are nil"])
                return reject("No Assets", "Background Asset and Sticker Asset are nil", error)
            }
@@ -102,7 +107,7 @@ class RNLegitStoryShare: NSObject{
            }
            
            if(backgroundVideoAsset != nil) {
-              backgroundData = try NSData(contentsOf: backgroundAsset!,
+              backgroundData = try NSData(contentsOf: backgroundVideoAsset!,
                               options: NSData.ReadingOptions(rawValue: 0))
            }
 
@@ -118,6 +123,7 @@ class RNLegitStoryShare: NSObject{
                              attributionLink: attributionLink,
                              backgroundBottomColor: backgroundBottomColor,
                              backgroundTopColor: backgroundTopColor,
+                             isVideo: backgroundVideoAsset != nil,
                              resolve: resolve,
                              reject: reject)
 
