@@ -85,6 +85,7 @@ class RNLegitStoryShare: NSObject{
            }
 
            let backgroundAsset = RCTConvert.nsurl(config["backgroundAsset"])
+           let backgroundVideoAsset = RCTConvert.nsurl(config["backgroundVideoAsset"])
            let backgroundBottomColor = RCTConvert.nsString(config["backgroundBottomColor"]) ?? ""
            let backgroundTopColor = RCTConvert.nsString(config["backgroundTopColor"]) ?? ""
            let stickerAsset = RCTConvert.nsurl(config["stickerAsset"])
@@ -98,6 +99,11 @@ class RNLegitStoryShare: NSObject{
                                           options: NSData.ReadingOptions(rawValue: 0))
 
                backgroundData = UIImage(data: decodedData)!.pngData()! as NSData
+           }
+           
+           if(backgroundVideoAsset != nil) {
+              backgroundData = try NSData(contentsOf: backgroundAsset!,
+                              options: NSData.ReadingOptions(rawValue: 0))
            }
 
            if(stickerAsset != nil){
